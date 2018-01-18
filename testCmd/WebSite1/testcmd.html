@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        cmd:
+        <input type="text" name="cmd" />
+        <br />
+        arg1:
+        <input type="text" name="arg1" />
+        <br />
+        arg2:
+        <input type="text" name="arg2" />
+        <br />
+        arg3:
+        <input type="text" name="arg3" />
+        <br />
+        arg4:
+        <input type="text" name="arg4" />
+        <br />
+        <button type="button" onclick="executeCmd()">Execute</button>
+        <br />
+        zCmd:
+        <textarea id="zCmd" style="width:100%"></textarea>
+        <!--<p id="zCmd"></p>-->
+        <br />
+        response:
+        <br />
+        errorCode:
+        <input name="errorCode" />
+        <br />
+        data:
+        <textarea id="zResponse" style="width:100%"></textarea>
+        <!--<p id="zResponse"></p>-->
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function executeCmd() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var cmdRet = JSON.parse(this.responseText);
+                    $('input[name="errorCode"]').val(cmdRet.errorCode);
+                    $("#zResponse").val(cmdRet.dataObj);
+                }
+            }
+            xhttp.open("POST", "http://localhost:51774/default.aspx", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            var cmdObj = {
+                "cmd": "",
+                "arg1": "",
+                "arg2": "",
+                "arg3": "",
+                "arg4": ""
+            };
+            cmdObj.cmd = $('input[name="cmd"]').val();
+            cmdObj.arg1 = $('input[name="arg1"]').val();
+            cmdObj.arg2 = $('input[name="arg2"]').val();
+            cmdObj.arg3 = $('input[name="arg3"]').val();
+            cmdObj.arg4 = $('input[name="arg4"]').val();
+            var zCmd = JSON.stringify(cmdObj);
+            //document.getElementById("zCmd").innerHTML = zCmd;
+            $('#zCmd').val(zCmd);
+            xhttp.send("cmdObj=" + zCmd);
+        }
+    </script>
+</body>
+</html>
